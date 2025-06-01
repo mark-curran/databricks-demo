@@ -1,7 +1,20 @@
 services:
   spark-sandbox:
+    profiles:
+      - sandbox
     image: spark:latest
     entrypoint: tail -f > /dev/null
     volumes:
       # Mount the README file so the container has some data to process.
       - ./README.md:/opt/spark/README.md
+
+  driver:
+    image: spark:latest
+    entrypoint: >
+      bash -c 
+      "
+      /opt/spark/sbin/start-connect-server.sh 
+      && tail -F /opt/spark/logs/* 2>/dev/null
+      "
+    ports:
+      - 15002:15002

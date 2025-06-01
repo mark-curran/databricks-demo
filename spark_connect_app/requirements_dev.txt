@@ -1,0 +1,6 @@
+# Include the prod requirements in dev
+-r requirements.txt
+
+# Dev dependencies
+black==25.1.0
+isort==6.0.1

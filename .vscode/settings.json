@@ -1,0 +1,12 @@
+{
+  "python.defaultInterpreterPath": ".venv/bin/python",
+  "[python]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "always"
+    },
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "isort.args": ["--profile", "black"],
+  "flake8.args": ["--max-line-length=88"],
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+}
