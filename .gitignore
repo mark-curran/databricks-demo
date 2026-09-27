@@ -1,1 +1,6 @@
+# Python virtual environments.
 .venv
+
+# Don't commit any personalized AI instructions or settings.
+AGENTS.md
+.claude/settings.local.json

@@ -1,6 +1,8 @@
 # Databricks Demo
 
-This repository demonstrates AWS Databricks functionality.
+## Project Summary
+
+A learning project that demonstrates AWS Databricks functionality.
 
 ## Databricks Ideas and Concepts
 
