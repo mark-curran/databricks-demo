@@ -21,14 +21,14 @@ We need to know how these relate to these concepts.
 
 ### Data Storage and Access
 
-Databricks is running on an AWS account inside it's own VPC. Data can be hosted within that VPC or can be hosted elsewhere in the AWS account.
+Databricks is running on an AWS account inside its own VPC. Data can be hosted within that VPC or can be hosted elsewhere in the AWS account.
 
 - Managed tables and volumes are fully managed by Databricks. Managed tables always use the Delta Lake format. It's unclear whether Databricks fully controls access to this data from within the AWS account.
 - External tables/storage are external to Databricks, but Databricks has access. You can control access to this data from within Databricks, but other services in the AWS account can also access this data.
 
 ### Metastore
 
-There is the Unit Catalog service manages metadata and permissions. It's a data governance solution. A Unity Catalogue Metastore stores the metatdata. Multiple workspaces are associated with a single Unity Catalogue Metastore, and each metastore is associated with an AWS region.
+There is the Unity Catalog service manages metadata and permissions. It's a data governance solution. A Unity Catalog Metastore stores the metadata. Multiple workspaces are associated with a single Unity Catalog Metastore, and each metastore is associated with an AWS region.
 
 ### Architecture
 
@@ -40,13 +40,13 @@ According to [the documentation](https://docs.databricks.com/aws/en/getting-star
 
 ### Basic Architecture
 
-According the [architecture documentation](https://spark.apache.org/docs/latest/cluster-overview.html) "Spark applications run as independent processes on a cluster". Though many mentions in the documentation are made of access to a file system, unlike an RDMS, Spark does not persist data to disk unless asked to.
+According to the [architecture documentation](https://spark.apache.org/docs/latest/cluster-overview.html) "Spark applications run as independent processes on a cluster". Though many mentions in the documentation are made of access to a file system, unlike an RDMS, Spark does not persist data to disk unless asked to.
 
 ### Driver Program
 
-You submit an application to the cluster of *worker nodes* as described [here](https://spark.apache.org/docs/latest/submitting-applications.html). Somewhere in your application you will need to instantiate a `SparkContext` object, which connects to a *cluster manager*. The cluster manager distributes the workload across the cluster. The part of the application with access to the `SparkConext` is called the *driver program* of the application.
+You submit an application to the cluster of *worker nodes* as described [here](https://spark.apache.org/docs/latest/submitting-applications.html). Somewhere in your application you will need to instantiate a `SparkContext` object, which connects to a *cluster manager*. The cluster manager distributes the workload across the cluster. The part of the application with access to the `SparkContext` is called the *driver program* of the application.
 
-Each node provides *executors* which are effectively just processes, i.e., an which provide access to CPU and private memory. When a driver program starts, it aquires these executors and sends them JAR or python files. Finally, the `SparkContext` (not the cluster manager) sends tasks to the executors to run.
+Each node provides *executors* which are effectively just processes, i.e., which provide access to CPU and private memory. When a driver program starts, it acquires these executors and sends them JAR or python files. Finally, the `SparkContext` (not the cluster manager) sends tasks to the executors to run.
 
 ![cluster manager](https://spark.apache.org/docs/latest/img/cluster-overview.png)
 
@@ -85,20 +85,20 @@ The lowest level entrypoint for launching a Spark application is a binary execut
   [application-arguments]
 ```
 
-The meanings are as followings:
+The meanings are as follows:
 
 - `--class`: The entrypoint of the application.
 - `--master`: The URL of the cluster manager. It can take [many different formats](https://spark.apache.org/docs/latest/submitting-applications.html) depending on the cluster manager.
 - `--deploy-mode`: Whether to start the driver program on the cluster or locally.
 - `--conf`: Any Spark configuration as "key=value" pairs.
-- `<application_jar>`: You applications jar file.
+- `<application_jar>`: Your application's jar file.
 - `[application_arguments]`: Your application's cli arguments.
 
 For python you replace `<application-jar>` with a `.py` file. 
 
 Dependencies can be added by indicating the location of files, i.e., `--jar-files` and `--py-files`. Those files can refer to URLs with various prefixes, e.g., `local` for local files, `hdfs` for files on a hdfs file store. Note that files are downloaded to a persistent volume on the each worker node, and these volumes need to be cleaned up from time to time.
 
-In the case of python, you can include additional `.py` files directly in the spark submit command, or artefacts produced by [PEX](https://github.com/pex-tool/pex) or [venv-pack](https://jcristharif.com/venv-pack/index.html).
+In the case of python, you can include additional `.py` files directly in the spark submit command, or artifacts produced by [PEX](https://github.com/pex-tool/pex) or [venv-pack](https://jcristharif.com/venv-pack/index.html).
 
 You do not need to include Spark itself as an application dependency. Each worker node automatically installs and injects this into  running tasks.
 
@@ -121,7 +121,7 @@ Beyond MapReduce, Spark offers the ability to
 - Filter results
 - Iterate over the same piece of data without invoking separate MapReduce operations.
 
-You can see [Computerphile video]((https://www.youtube.com/watch?v=tDVPcqGpEnM)) or the [Databricks documentation on MapReduce](https://www.databricks.com/glossary/mapreduce) for more information.
+You can see [Computerphile video](https://www.youtube.com/watch?v=tDVPcqGpEnM)) or the [Databricks documentation on MapReduce](https://www.databricks.com/glossary/mapreduce) for more information.
 
 ### Shared Variables
 
@@ -154,10 +154,10 @@ Inside this pyspark shell session, you can work through the instructions in the 
 
 - Get a better understanding of [Spark Connect](https://spark.apache.org/docs/latest/spark-connect-overview.html)
 - Get a better understanding of what's happening when you run Spark in "local" mode.
-- How to program with an RDD as oppossed to a Dataset/DataFrame (link to [programming guide](https://spark.apache.org/docs/latest/rdd-programming-guide.html))?
+- How to program with an RDD as opposed to a Dataset/DataFrame (link to [programming guide](https://spark.apache.org/docs/latest/rdd-programming-guide.html))?
 - What exactly is HDFS and how is it different from RDD? You can read the [Wikipedia article](https://en.wikipedia.org/wiki/Apache_Hadoop) or the Databricks explanation of it [here](https://www.databricks.com/glossary/hadoop-distributed-file-system-hdfs)
 - Reread the [Spark glossary](https://spark.apache.org/docs/latest/job-scheduling.html).
-- Read more about [pyton package management on Spark](https://spark.apache.org/docs/latest/api/python/user_guide/python_packaging.html).
+- Read more about [python package management on Spark](https://spark.apache.org/docs/latest/api/python/user_guide/python_packaging.html).
 - Understand Spark shuffling in this [article](https://medium.com/towards-data-architecture/spark-shuffling-395468fbf623) and [this article](https://medium.com/@philipp.brunenberg/understanding-apache-spark-shuffle-85644d90c8c6).
 
 ## Ideas for this Demo
@@ -169,9 +169,9 @@ Inside this pyspark shell session, you can work through the instructions in the 
 
 ### Databricks Ideas
 
-- DONE: Setup a Databricks deployment in a single AWS region.
+- DONE: Set up a Databricks deployment in a single AWS region.
 - Create a single Databricks workspace.
 - Create a mix of managed and external data stores.
 - Create some Spark notebooks or other Databricks assets.
-- OPTIONAL: Create Unity Catalogue metastore scoped to that region.
-- OPTIONAL: Create more a second workspace and associate it with the same metastore.
+- OPTIONAL: Create Unity Catalog metastore scoped to that region.
+- OPTIONAL: Create a second workspace and associate it with the same metastore.
